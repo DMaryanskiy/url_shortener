@@ -7,4 +7,4 @@ class Urls(sqlmodel.SQLModel, table=True):
     original_url: str = sqlmodel.Field(unique=True)
     shorten_url: str = sqlmodel.Field(unique=True)
 
-    __table_args__ = (sqlalchemy.UniqueConstraint('original_url', 'shorten_url'))
+    __table_args__ = (sqlalchemy.UniqueConstraint('original_url', 'shorten_url'),)
