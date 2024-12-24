@@ -1,8 +1,12 @@
+import os
+
 from fastapi import testclient
 
 from src import database as db
 from src import main
 from src import models
+
+os.environ['DOMAIN'] = 'http://127.0.0.1:8000/'
 
 client = testclient.TestClient(main.app)
 

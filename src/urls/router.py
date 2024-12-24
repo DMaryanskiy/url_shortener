@@ -4,13 +4,20 @@ import string
 import fastapi
 import sqlmodel
 
+from src import config
 from src import database as db
 from src import models as db_models
 from src.urls import exceptions
 from src.urls import models
 
 URLS_ROUTER = fastapi.APIRouter(prefix='/url')
-DOMAIN = 'http://127.0.0.1:8000/'
+DOMAIN = config.CONFIG.get('DOMAIN', 'http://127.0.0.1:8000')
+
+
+async def insert_db(original_url: str, shorten_url: str, session: db.SessionDep) -> None:
+    db_url = db_models.Urls(original_url=original_url, shorten_url=shorten_url)
+    session.add(db_url)
+    session.commit()
 
 
 async def short_uri_exists(short_uri: str, session: db.SessionDep) -> bool:
@@ -45,7 +52,7 @@ async def insert_url(url_body: models.ShortenUrlRequest, session: db.SessionDep)
         sqlmodel.select(db_models.Urls).where(db_models.Urls.original_url == url_body.original_url))
     row = url_by_original.one_or_none()
     if row:
-        shorten_url = DOMAIN + row.shorten_url
+        shorten_url = DOMAIN + '/' + row.shorten_url
         return models.ShortenUrlResponse(shorten_url=shorten_url)
     
     if url_body.shorten_url:
@@ -53,10 +60,8 @@ async def insert_url(url_body: models.ShortenUrlRequest, session: db.SessionDep)
         if uri_exists:
             raise exceptions.ShortenUrlAlreadyExists(short_url=url_body.shorten_url)
         
-        shorten_url = DOMAIN + url_body.shorten_url
-        db_url = db_models.Urls(original_url=url_body.original_url, shorten_url=shorten_url)
-        session.add(db_url)
-        session.commit()
+        shorten_url = DOMAIN + '/' + url_body.shorten_url
+        await insert_db(url_body.original_url, shorten_url, session)
 
         return models.ShortenUrlResponse(shorten_url=shorten_url)
     
@@ -71,9 +76,7 @@ async def insert_url(url_body: models.ShortenUrlRequest, session: db.SessionDep)
         if attempt == 20:
             raise exceptions.ShortenUrlAlreadyExists(shorten_uri)
 
-    shorten_url = DOMAIN + shorten_uri
-    db_url = db_models.Urls(original_url=url_body.original_url, shorten_url=shorten_uri)
-    session.add(db_url)
-    session.commit()
+    shorten_url = DOMAIN + '/' + shorten_uri
+    await insert_db(url_body.original_url, shorten_url, session)
 
     return models.ShortenUrlResponse(shorten_url=shorten_url)
