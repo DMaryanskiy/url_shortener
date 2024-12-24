@@ -1,3 +1,6 @@
+import typing
+
+import fastapi
 import sqlmodel
 
 from src import config
@@ -12,5 +15,7 @@ def init_db():
     sqlmodel.SQLModel.metadata.create_all(ENGINE)
 
 def get_session():
-    with sqlmodel.Session() as session:
+    with sqlmodel.Session(ENGINE) as session:
         yield session
+
+SessionDep = typing.Annotated[sqlmodel.Session, fastapi.Depends(get_session)]
