@@ -2,29 +2,29 @@ import fastapi
 from fastapi import responses
 
 
-class ShortenUriAlreadyExists(Exception):
-    def __init__(self, short_url: str):
-        self.short_url = short_url
+class ShortUriAlreadyExists(Exception):
+    def __init__(self, short_uri: str):
+        self.short_uri = short_uri
 
 
-async def shorten_uri_already_exists_handler(request: fastapi.Request, exc: ShortenUriAlreadyExists):
+async def short_uri_already_exists_handler(request: fastapi.Request, exc: ShortUriAlreadyExists):
     return responses.JSONResponse(
         status_code=fastapi.status.HTTP_400_BAD_REQUEST,
         content={
-            'message': f'Short URI `{exc.short_url}` is already used for another long URL'
+            'message': f'Short URI `{exc.short_uri}` is already used for another long URL'
         }
     )
 
 
-class ShortenUriDoesNotExist(Exception):
-    def __init__(self, short_url: str):
-        self.short_url = short_url
+class ShortUriDoesNotExist(Exception):
+    def __init__(self, short_uri: str):
+        self.short_uri = short_uri
 
 
-async def shorten_uri_does_not_exist_handler(request: fastapi.Request, exc: ShortenUriDoesNotExist):
+async def short_uri_does_not_exist_handler(request: fastapi.Request, exc: ShortUriDoesNotExist):
     return responses.JSONResponse(
         status_code=fastapi.status.HTTP_404_NOT_FOUND,
         content= {
-            'message': f'Short URI `{exc.short_url}` does not exist'
+            'message': f'Short URI `{exc.short_uri}` does not exist'
         }
     )

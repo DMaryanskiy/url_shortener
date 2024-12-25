@@ -19,7 +19,7 @@ def test_uri_not_exists(client: testclient.TestClient):
 
 
 def test_redirect(session: db.SessionDep, client: testclient.TestClient):
-    existing_long = models.Urls(original_url='exists', shorten_uri='exists')
+    existing_long = models.Urls(original_url='exists', short_uri='exists')
     session.add(existing_long)
     session.commit()
 
