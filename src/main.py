@@ -1,11 +1,14 @@
 import contextlib
 
+import dotenv
 import fastapi
 from fastapi.openapi import utils
 
 from src import database
 from src.urls import router as urls_services
 from src.urls import exceptions as urls_excs
+
+dotenv.load_dotenv()
 
 
 @contextlib.asynccontextmanager

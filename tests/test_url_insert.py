@@ -54,7 +54,7 @@ def test_long_exists(session: db.SessionDep, client: testclient.TestClient):
     assert row == models.Urls(original_url='exists', short_uri='exists', id=1)
 
 
-def test_with_random_short(client: testclient.TestClient):
+def test_with_random_short(session: db.SessionDep, client: testclient.TestClient):
     response = client.post(
         '/api/v1/url/shorten',
         json={
@@ -66,7 +66,13 @@ def test_with_random_short(client: testclient.TestClient):
     data = response.json()
     uri = data['short_uri'].split('/')[-1]
 
-    assert len(uri) == 12 # we generate sequence with length of 20
+    assert len(uri) == 12 # we generate sequence with length of 12
+
+    res = session.exec(
+        sqlmodel.select(models.Urls).where(models.Urls.original_url == 'long_url')
+    )
+    row = res.one_or_none()
+    assert row.original_url == 'long_url'
 
 
 def test_short_exists(session: db.SessionDep, client: testclient.TestClient):

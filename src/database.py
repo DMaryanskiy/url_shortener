@@ -1,12 +1,11 @@
+import os
 import typing
 
 import fastapi
 import sqlmodel
 
-from src import config
 
-
-SQLITE_FILE_NAME = config.CONFIG.get('SQLITE_FILE_NAME', '')
+SQLITE_FILE_NAME = os.environ.get('SQLITE_FILE_NAME', '')
 
 ENGINE = sqlmodel.create_engine(f'sqlite:///{SQLITE_FILE_NAME}', connect_args={"check_same_thread": False})
 

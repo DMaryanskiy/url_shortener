@@ -1,3 +1,4 @@
+import os
 import random
 import string
 
@@ -5,7 +6,6 @@ import fastapi
 from fastapi import responses
 import sqlmodel
 
-from src import config
 from src import database as db
 from src import models as db_models
 from src.urls import exceptions
@@ -13,7 +13,7 @@ from src.urls import models
 from src.urls import utils
 
 URLS_ROUTER = fastapi.APIRouter(prefix='/url')
-DOMAIN = config.CONFIG.get('DOMAIN', 'http://127.0.0.1:8000')
+DOMAIN = os.environ.get('DOMAIN', 'http://127.0.0.1:8000')
 
 
 @URLS_ROUTER.post(
@@ -73,6 +73,7 @@ async def insert_url(url_body: models.ShortUriRequest, session: db.SessionDep) -
 @URLS_ROUTER.get(
         '/{short_uri}',
         status_code=307,
+        response_class=responses.RedirectResponse,
         responses={
             307: {
                 'description': 'Original URL was found and you were redirected',
@@ -91,4 +92,4 @@ async def get_original_url(short_uri: str, session: db.SessionDep):
     if not row:
         raise exceptions.ShortUriDoesNotExist(short_uri)
     
-    return responses.RedirectResponse(row.original_url)
+    return row.original_url
