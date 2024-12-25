@@ -9,7 +9,8 @@ st.write(
     '''
     Small API which helps to shorten your enourmous big url to a moew tiny one.
     Just put your url in a form and it'll generate small uri for it.
-    Also you may provide your own uri to get your custom link
+    Also you may provide your own uri to get your custom link.
+    If short link already exists for a long url, we'll send you existing link
     '''
 )
 

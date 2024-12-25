@@ -71,7 +71,7 @@ def test_with_random_short(session: db.SessionDep, client: testclient.TestClient
     res = session.exec(
         sqlmodel.select(models.Urls).where(models.Urls.original_url == 'long_url')
     )
-    row = res.one_or_none()
+    row = res.one()
     assert row.original_url == 'long_url'
 
 
