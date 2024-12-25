@@ -8,7 +8,7 @@ from src import config
 
 SQLITE_FILE_NAME = config.CONFIG.get('SQLITE_FILE_NAME', '')
 
-ENGINE = sqlmodel.create_engine(f'sqlite:///{SQLITE_FILE_NAME}')
+ENGINE = sqlmodel.create_engine(f'sqlite:///{SQLITE_FILE_NAME}', connect_args={"check_same_thread": False})
 
 
 def init_db():

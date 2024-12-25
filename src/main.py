@@ -49,3 +49,4 @@ api_router.include_router(urls_services.URLS_ROUTER)
 
 app.include_router(api_router)
 app.add_exception_handler(urls_excs.ShortenUrlAlreadyExists, urls_excs.shorten_url_already_exists_handler)
+app.add_exception_handler(urls_excs.ShortenUrlDoesNotExist, urls_excs.shorten_url_does_not_exist_handler)
