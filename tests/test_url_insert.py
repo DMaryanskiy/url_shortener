@@ -13,24 +13,24 @@ def test_with_short_uri(session: db.SessionDep, client: testclient.TestClient):
         '/api/v1/url/shorten',
         json={
             'original_url': 'long_url',
-            'shorten_url': 'short'
+            'shorten_uri': 'short'
         },
     )
 
     assert response.status_code == 201
     data = response.json()
 
-    assert data == {'shorten_url': 'http://127.0.0.1:8000/api/v1/url/short'}
+    assert data == {'shorten_uri': 'http://127.0.0.1:8000/api/v1/url/short'}
 
     res = session.exec(
-        sqlmodel.select(models.Urls).where(models.Urls.shorten_url == 'short')
+        sqlmodel.select(models.Urls).where(models.Urls.shorten_uri == 'short')
     )
     row = res.one_or_none()
-    assert row == models.Urls(original_url='long_url', shorten_url='short', id=1)
+    assert row == models.Urls(original_url='long_url', shorten_uri='short', id=1)
 
 
 def test_long_exists(session: db.SessionDep, client: testclient.TestClient):
-    existing_long = models.Urls(original_url='exists', shorten_url='exists')
+    existing_long = models.Urls(original_url='exists', shorten_uri='exists')
     session.add(existing_long)
     session.commit()
 
@@ -38,20 +38,20 @@ def test_long_exists(session: db.SessionDep, client: testclient.TestClient):
         '/api/v1/url/shorten',
         json={
             'original_url': 'exists',
-            'shorten_url': 'short'
+            'shorten_uri': 'short'
         },
     )
 
     assert response.status_code == 201
     data = response.json()
 
-    assert data == {'shorten_url': 'http://127.0.0.1:8000/api/v1/url/exists'}
+    assert data == {'shorten_uri': 'http://127.0.0.1:8000/api/v1/url/exists'}
 
     res = session.exec(
-        sqlmodel.select(models.Urls).where(models.Urls.shorten_url == 'exists')
+        sqlmodel.select(models.Urls).where(models.Urls.shorten_uri == 'exists')
     )
     row = res.one_or_none()
-    assert row == models.Urls(original_url='exists', shorten_url='exists', id=1)
+    assert row == models.Urls(original_url='exists', shorten_uri='exists', id=1)
 
 
 def test_with_random_short(client: testclient.TestClient):
@@ -64,13 +64,13 @@ def test_with_random_short(client: testclient.TestClient):
 
     assert response.status_code == 201
     data = response.json()
-    uri = data['shorten_url'].split('/')[-1]
+    uri = data['shorten_uri'].split('/')[-1]
 
     assert len(uri) == 12 # we generate sequence with length of 20
 
 
 def test_short_exists(session: db.SessionDep, client: testclient.TestClient):
-    existing_long = models.Urls(original_url='exists', shorten_url='exists')
+    existing_long = models.Urls(original_url='exists', shorten_uri='exists')
     session.add(existing_long)
     session.commit()
 
@@ -78,7 +78,7 @@ def test_short_exists(session: db.SessionDep, client: testclient.TestClient):
         '/api/v1/url/shorten',
         json={
             'original_url': 'long',
-            'shorten_url': 'exists'
+            'shorten_uri': 'exists'
         },
     )
 

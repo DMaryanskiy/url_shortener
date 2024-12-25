@@ -2,12 +2,12 @@ import fastapi
 from fastapi import responses
 
 
-class ShortenUrlAlreadyExists(Exception):
+class ShortenUriAlreadyExists(Exception):
     def __init__(self, short_url: str):
         self.short_url = short_url
 
 
-async def shorten_url_already_exists_handler(request: fastapi.Request, exc: ShortenUrlAlreadyExists):
+async def shorten_uri_already_exists_handler(request: fastapi.Request, exc: ShortenUriAlreadyExists):
     return responses.JSONResponse(
         status_code=fastapi.status.HTTP_400_BAD_REQUEST,
         content={
@@ -16,12 +16,12 @@ async def shorten_url_already_exists_handler(request: fastapi.Request, exc: Shor
     )
 
 
-class ShortenUrlDoesNotExist(Exception):
+class ShortenUriDoesNotExist(Exception):
     def __init__(self, short_url: str):
         self.short_url = short_url
 
 
-async def shorten_url_does_not_exist_handler(request: fastapi.Request, exc: ShortenUrlDoesNotExist):
+async def shorten_uri_does_not_exist_handler(request: fastapi.Request, exc: ShortenUriDoesNotExist):
     return responses.JSONResponse(
         status_code=fastapi.status.HTTP_404_NOT_FOUND,
         content= {
