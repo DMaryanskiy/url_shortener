@@ -1,13 +1,13 @@
 import pydantic
 
 
-class ShortenUrlRequest(pydantic.BaseModel):
+class ShortenUriRequest(pydantic.BaseModel):
     original_url: str
-    shorten_url: str | None = None
+    shorten_uri: str | None = None
 
 
-class ShortenUrlResponse(pydantic.BaseModel):
-    shorten_url: str
+class ShortenUriResponse(pydantic.BaseModel):
+    shorten_uri: str
 
 
 class ErrorMessage(pydantic.BaseModel):

@@ -48,4 +48,5 @@ api_router = fastapi.APIRouter(prefix='/api/v1')
 api_router.include_router(urls_services.URLS_ROUTER)
 
 app.include_router(api_router)
-app.add_exception_handler(urls_excs.ShortenUrlAlreadyExists, urls_excs.shorten_url_already_exists_handler)
+app.add_exception_handler(urls_excs.ShortenUriAlreadyExists, urls_excs.shorten_uri_already_exists_handler)
+app.add_exception_handler(urls_excs.ShortenUriDoesNotExist, urls_excs.shorten_uri_does_not_exist_handler)
